@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net5.0": {
-      "HtmlAgilityPack/1.11.42": {
+      "HtmlAgilityPack/1.11.53": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/HtmlAgilityPack.dll": {}
@@ -1703,14 +1703,14 @@
     }
   },
   "libraries": {
-    "HtmlAgilityPack/1.11.42": {
-      "sha512": "LDc1bEfF14EY2DZzak4xvzWvbpNXK3vi1u0KQbBpLUN4+cx/VrvXhgCAMSJhSU5vz0oMfW9JZIR20vj/PkDHPA==",
+    "HtmlAgilityPack/1.11.53": {
+      "sha512": "FeBqVmrMVoKFcsg6BhMJ5FYSx476AKDic9oHk5DsYSj606agR1XuxaaicxJ28X/LZkPTX51e3NaB8QJ5G+1B/w==",
       "type": "package",
-      "path": "htmlagilitypack/1.11.42",
+      "path": "htmlagilitypack/1.11.53",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "htmlagilitypack.1.11.42.nupkg.sha512",
+        "htmlagilitypack.1.11.53.nupkg.sha512",
         "htmlagilitypack.nuspec",
         "lib/Net35/HtmlAgilityPack.dll",
         "lib/Net35/HtmlAgilityPack.pdb",
@@ -6117,7 +6117,7 @@
   },
   "projectFileDependencyGroups": {
     "net5.0": [
-      "HtmlAgilityPack >= 1.11.42",
+      "HtmlAgilityPack >= 1.11.53",
       "PuppeteerSharp >= 6.2.0",
       "RestSharp >= 107.3.0",
       "Serilog >= 2.10.0",
@@ -6170,7 +6170,7 @@
         "dependencies": {
           "HtmlAgilityPack": {
             "target": "Package",
-            "version": "[1.11.42, )"
+            "version": "[1.11.53, )"
           },
           "PuppeteerSharp": {
             "target": "Package",

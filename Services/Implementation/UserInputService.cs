@@ -1,10 +1,6 @@
 ﻿using FlightReservationConsole.Models;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FlightReservationConsole.Services.Implementation
 {
@@ -37,35 +33,4 @@ namespace FlightReservationConsole.Services.Implementation
             return flightReservation;
         }
     }
-
-    public class ResponseService
-    {
-        public static SearchResponse GetSearchResponse(CheapestFlight cheapestFlight)
-        {
-            // Define your response logic here based on the given criteria.
-            // For this example, we'll assume that if the price is below a certain threshold,
-            // we stop searching; otherwise, we continue searching.
-
-            // You can adjust this logic based on your specific requirements.
-
-            decimal priceThreshold = 300; // Set your desired price threshold here.
-
-            if (decimal.TryParse(cheapestFlight.Price.Replace("$", ""), out decimal price))
-            {
-                if (price <= priceThreshold)
-                {
-                    return SearchResponse.StopSearch; // Stop searching if the price is below or equal to the threshold.
-                }
-            }
-
-            return SearchResponse.ContinueSearch; // Continue searching if the price is above the threshold.
-        }
-    }
-
-    public enum SearchResponse
-    {
-        ContinueSearch, // Indicates that the search should continue.
-        StopSearch      // Indicates that the search should be stopped.
-    }
-
 }

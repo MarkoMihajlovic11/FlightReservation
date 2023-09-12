@@ -1,16 +1,16 @@
 ﻿using FlightReservationConsole.Models;
 using FlightReservationConsole.Puppeteer;
+using FlightReservationConsole.Services.Interfaces;
+using HtmlAgilityPack;
 using PuppeteerSharp;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace FlightReservationConsole.Services.Implementation
 {
-    public class FlightSearchService //: IFlightSearchService
+    public class FlightSearchService : IFlightSearchService
     {
         private readonly string _path;
         private string _html;
@@ -37,16 +37,16 @@ namespace FlightReservationConsole.Services.Implementation
                 using var page = (await browser.PagesAsync())[0];
 
                 await GetPageContent(url, page);
-
+                CheapestFlight cheapestFlight = new();
+                int flightNumber = 0;
                 while (true)
                 {
-                    var cheapestFlight = await FindCheapestPriceAndBookingUrl(page);
-                    int nights = int.Parse(cheapestFlight.BookingUrl.Split("ResultCardItinerarystyled__SectorLayoverTextBackground-sc-iwhyue-9 cJMqrQ\">")[1]
-                        .Split("nights")[0].Trim());
+                    var isFinded = await FindCheapestPriceAndBookingUrl(flightReservation, cheapestFlight, page, flightNumber);
 
-                    if (nights >= flightReservation.LessThanDays && nights <= flightReservation.MoreThanDays)
+                    if (isFinded)
                         return cheapestFlight;
 
+                    flightNumber++;
                     await ScrollPage(page);
                 }
             }
@@ -62,17 +62,16 @@ namespace FlightReservationConsole.Services.Implementation
             var button = await page.QuerySelectorAsync("button");
             await button.ClickAsync();
             Thread.Sleep(10000);
-            _html = await page.GetContentAsync();
         }
 
         private async Task ScrollPage(Page page)
         {
             await page.EvaluateExpressionAsync("window.scrollBy(1, window.innerHeight)");
             await Task.Delay(5000); // Use Task.Delay instead of Thread.Sleep
-           // await page.GetContentAsync();
+                                    // await page.GetContentAsync();
         }
 
-        private async Task<CheapestFlight> FindCheapestPriceAndBookingUrl(Page page)
+        private async Task<bool> FindCheapestPriceAndBookingUrl(FlightReservation flightReservation, CheapestFlight cheapestFlight, Page page, int flightNumber)
         {
             var url = "";
             while (true)
@@ -80,23 +79,46 @@ namespace FlightReservationConsole.Services.Implementation
                 try
                 {
                     var pageContent = await page.GetContentAsync();
-                    url = _html.Split("<a class=\"ButtonPrimitive__StyledButtonPrimitive-sc-1lbd19y-0 kBsuLf\"")[1]
-                        .Split("rel=\"nofollow\"")[0]
-                        .Replace("\"", "")
-                        .Replace("href=", "")
-                        .Replace(";", "&")
-                        .Trim();
 
-                    url = $"{_mainUrl}{url}";
+                    var doc = new HtmlDocument();
+                    doc.LoadHtml(pageContent);
 
-                    var price = _html.Split("<span class=\" length-10\">")[1]
-                        .Split("</span>")[0];
+                    var nightsNode = doc.DocumentNode.SelectNodes("//div[@class='bg-white-normal px-sm']")[flightNumber];
+                    var nights = int.Parse
+                        (
+                        nightsNode.InnerHtml
+                        .Split(" ")
+                        .FirstOrDefault()
+                        );
 
-                    return new CheapestFlight { Price = price, BookingUrl = url };
+                    if (nights >= flightReservation.LessThanDays && nights <= flightReservation.MoreThanDays)
+                    {
+                        var bookingUrlNode = doc.DocumentNode.SelectNodes("//a[@class='ButtonPrimitive__StyledButtonPrimitive-sc-j8pavp-0 kyEVVq']")[flightNumber];
+                        var bookingUrl = bookingUrlNode.GetAttributeValue("href", "");
+                        url = $"{_mainUrl}{url}";
+                        cheapestFlight.BookingUrl = url;
+
+
+
+                        var priceNode = doc.DocumentNode.SelectNodes("//span[@class=' length-10']")[flightNumber];
+                        var price = priceNode.InnerHtml;
+
+                        cheapestFlight.Price = price;
+
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
+
+
+
                 }
                 catch (Exception)
                 {
-                    await ScrollPage(page);
+                    //await ScrollPage(page);
                 }
             }
         }
