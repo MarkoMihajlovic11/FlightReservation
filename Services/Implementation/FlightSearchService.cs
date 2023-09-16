@@ -13,7 +13,6 @@ namespace FlightReservationConsole.Services.Implementation
     public class FlightSearchService : IFlightSearchService
     {
         private readonly string _path;
-        private string _html;
         private readonly string _mainUrl = "https://www.kiwi.com";
 
         public FlightSearchService(string path)
@@ -52,7 +51,7 @@ namespace FlightReservationConsole.Services.Implementation
             }
             catch (Exception ex)
             {
-                throw new Exception("There is no cheap flights for that dates", ex);
+                throw new Exception("Can't find any flight for those dates and location. Please check input parameters");
             }
         }
 
@@ -76,50 +75,41 @@ namespace FlightReservationConsole.Services.Implementation
             var url = "";
             while (true)
             {
-                try
+                var pageContent = await page.GetContentAsync();
+
+                var doc = new HtmlDocument();
+                doc.LoadHtml(pageContent);
+
+                var nightsNode = doc.DocumentNode.SelectNodes("//div[@class='bg-white-normal px-sm']")[flightNumber];
+                var nights = int.Parse
+                    (
+                    nightsNode.InnerHtml
+                    .Split(" ")
+                    .FirstOrDefault()
+                    );
+
+                if (nights >= flightReservation.LessThanDays && nights <= flightReservation.MoreThanDays)
                 {
-                    var pageContent = await page.GetContentAsync();
-
-                    var doc = new HtmlDocument();
-                    doc.LoadHtml(pageContent);
-
-                    var nightsNode = doc.DocumentNode.SelectNodes("//div[@class='bg-white-normal px-sm']")[flightNumber];
-                    var nights = int.Parse
-                        (
-                        nightsNode.InnerHtml
-                        .Split(" ")
-                        .FirstOrDefault()
-                        );
-
-                    if (nights >= flightReservation.LessThanDays && nights <= flightReservation.MoreThanDays)
-                    {
-                        var bookingUrlNode = doc.DocumentNode.SelectNodes("//a[@class='ButtonPrimitive__StyledButtonPrimitive-sc-j8pavp-0 kyEVVq']")[flightNumber];
-                        var bookingUrl = bookingUrlNode.GetAttributeValue("href", "");
-                        url = $"{_mainUrl}{url}";
-                        cheapestFlight.BookingUrl = url;
+                    var bookingUrlNode = doc.DocumentNode.SelectNodes("//a[@class='ButtonPrimitive__StyledButtonPrimitive-sc-j8pavp-0 kyEVVq']")[flightNumber];
+                    var bookingUrl = bookingUrlNode.GetAttributeValue("href", "");
+                    url = $"{_mainUrl}{url}";
+                    cheapestFlight.BookingUrl = url;
 
 
+                    var priceNode = doc.DocumentNode.SelectNodes("//span[contains(@class, 'length')]")[flightNumber];
+                    var price = priceNode.InnerHtml
+                        .Replace("&nbsp;", "");
 
-                        var priceNode = doc.DocumentNode.SelectNodes("//span[@class=' length-10']")[flightNumber];
-                        var price = priceNode.InnerHtml;
+                    cheapestFlight.Price = price;
 
-                        cheapestFlight.Price = price;
-
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-
-
-
-
+                    return true;
                 }
-                catch (Exception)
+                else
                 {
-                    //await ScrollPage(page);
+                    return false;
                 }
+
+
             }
         }
     }

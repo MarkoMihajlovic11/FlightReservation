@@ -1,12 +1,13 @@
 ﻿using FlightReservationConsole.Models;
+using FlightReservationConsole.Services.Interfaces;
 using System;
 using System.Globalization;
 
 namespace FlightReservationConsole.Services.Implementation
 {
-    public class UserInputService
+    public class UserInputService : IUserInputService
     {
-        public static FlightReservation GetFlightReservation()
+        public FlightReservation GetFlightReservation()
         {
             FlightReservation flightReservation = new();
 

@@ -1,14 +1,16 @@
 ﻿using FlightReservationConsole.Models;
+using FlightReservationConsole.Services.Interfaces;
 using System;
 
 namespace FlightReservationConsole.Services.Implementation
 {
-    public class ResponseService
+    public class ResponseService : IResponseService
     {
-        public static void WriteResponse(CheapestFlight cheapestFlight)
+        public string WriteResponse(CheapestFlight cheapestFlight)
         {
-            Console.WriteLine($"Cheapest flight {cheapestFlight.Price}");
-            Console.WriteLine($"Can be booked on url: {cheapestFlight.BookingUrl}");
+            string message = $"Cheapest flight {cheapestFlight.Price} {Environment.NewLine}Can be booked on url: {cheapestFlight.BookingUrl}";
+            Console.WriteLine(message);
+            return message;
 
         }
     }

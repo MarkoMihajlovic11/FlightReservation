@@ -6131,9 +6131,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\marko\\Documents\\GitHub\\FlightReservation1\\FlightReservationConsole.csproj",
-      "projectName": "FlightReservationConsole",
-      "projectPath": "C:\\Users\\marko\\Documents\\GitHub\\FlightReservation1\\FlightReservationConsole.csproj",
+      "projectUniqueName": "C:\\Users\\marko\\Documents\\GitHub\\FlightReservation1\\FlightReservation.csproj",
+      "projectName": "FlightReservation",
+      "projectPath": "C:\\Users\\marko\\Documents\\GitHub\\FlightReservation1\\FlightReservation.csproj",
       "packagesPath": "C:\\Users\\marko\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\marko\\Documents\\GitHub\\FlightReservation1\\obj\\",
       "projectStyle": "PackageReference",
