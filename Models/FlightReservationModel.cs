@@ -2,7 +2,7 @@
 
 namespace FlightReservationConsole.Models
 {
-    public class FlightReservation
+    public class FlightReservationModel
     {
         public string FlightFrom { get; set; }
 

@@ -2,7 +2,7 @@
 using Serilog;
 using System.Runtime.InteropServices;
 
-namespace FlightReservationConsole
+namespace FlightReservationConsole.Puppeteer
 {
     public class Downloader
     {
