@@ -24,12 +24,19 @@ namespace FlightReservationConsole
                 var flightReservation = _userInputService.GetFlightReservation();
                 var cheapestFlight = await _flightSearchService.FindCheapestFlight(flightReservation);
 
-                return _responseService.WriteResponse(cheapestFlight);
+                var response = _responseService.WriteResponse(cheapestFlight);
+                return response;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return ex.Message;
+                Console.Write("Try again y/n:");
+                var answer = Console.ReadLine();
+
+                if (answer == "y")
+                    return await RunAsync();
+                else
+                    return ex.Message;
             }
         }
     }

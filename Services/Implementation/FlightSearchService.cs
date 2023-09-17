@@ -20,7 +20,7 @@ namespace FlightReservationConsole.Services.Implementation
             _path = path;
         }
 
-        public async Task<CheapestFlight> FindCheapestFlight(FlightReservation flightReservation)
+        public async Task<CheapestFlight> FindCheapestFlight(FlightReservationModel flightReservation)
         {
             try
             {
@@ -70,7 +70,7 @@ namespace FlightReservationConsole.Services.Implementation
                                     // await page.GetContentAsync();
         }
 
-        private async Task<bool> FindCheapestPriceAndBookingUrl(FlightReservation flightReservation, CheapestFlight cheapestFlight, Page page, int flightNumber)
+        private async Task<bool> FindCheapestPriceAndBookingUrl(FlightReservationModel flightReservation, CheapestFlight cheapestFlight, Page page, int flightNumber)
         {
             var url = "";
             while (true)

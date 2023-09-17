@@ -7,9 +7,9 @@ namespace FlightReservationConsole.Services.Implementation
 {
     public class UserInputService : IUserInputService
     {
-        public FlightReservation GetFlightReservation()
+        public FlightReservationModel GetFlightReservation()
         {
-            FlightReservation flightReservation = new();
+            FlightReservationModel flightReservation = new();
 
             //Insert flight from-to locations
             Console.Write("Flight from(ex belgrade-serbia): ");
